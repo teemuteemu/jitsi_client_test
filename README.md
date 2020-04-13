@@ -1,4 +1,7 @@
-# test_client
+# Vue js custom client for jitsi
+
+Testing out a way to create a client for jitsi using lib-jitsi-meet. For development it uses https://github.com/jitsi/docker-jitsi-meet for the local jitsi server, so set that up first.
+
 
 ## Project setup
 ```
@@ -19,6 +22,3 @@ yarn build
 ```
 yarn lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
