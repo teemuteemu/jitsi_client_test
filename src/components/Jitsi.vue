@@ -15,9 +15,6 @@ export default {
     connection: null,
   },
   methods: {
-    init: function() {
-      window.JitsiMeetJS.init();
-    },
     connect: async function() {
       const {
         CONNECTION_ESTABLISHED,
@@ -29,37 +26,34 @@ export default {
         serviceUrl: '//localhost:8080/http-bind',
       };
 
-      const connectionOptions = {
-        id: 'meet.jitsi',
-      };
+      window.JitsiMeetJS.init();
 
       this.connection = new window.JitsiMeetJS.JitsiConnection(null, null, options);
       this.connection.addEventListener(CONNECTION_ESTABLISHED, this.onConnectionSuccess);
       this.connection.addEventListener(CONNECTION_FAILED, this.onConnectionFailed);
       this.connection.addEventListener(CONNECTION_DISCONNECTED, this.onConnectionDisconnected);
 
-      await this.connection.connect(connectionOptions);
-
       try {
+        await this.connection.connect({ id: 'meet.jitsi' });
         const tracks = await window.JitsiMeetJS.createLocalTracks({ devices: ['video', 'audio'] });
 
         this.onLocalTracks(tracks);
       } catch (err) {
-        console.error('TODO: handle local track error');
+        console.error('TODO: handle connection error');
         console.error(err);
       }
     },
     onConnectionSuccess: async function() {
-      console.log('Connected');
       const {
         TRACK_ADDED,
         CONFERENCE_ADDED,
       } = window.JitsiMeetJS.events.conference;
 
-      const confOptions = {
+      const conferenceOptions = {
         openBridgeChannel: true,
       };
-      const room = this.connection.initJitsiConference("conference1", confOptions);
+
+      const room = this.connection.initJitsiConference('fancy_conference_name', conferenceOptions);
       room.addEventListener(TRACK_ADDED, this.onTrackAdded);
       room.addEventListener(CONFERENCE_ADDED, this.onConferenceAdded);
 
@@ -98,7 +92,6 @@ export default {
     },
   },
   mounted: async function() {
-    this.init();
     this.connect();
   }
 }
